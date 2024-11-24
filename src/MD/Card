@@ -1,0 +1,9 @@
+public class TurnPriorityManager{
+    private PlayerManger playerManager;
+    private Player currentPlayer;
+    private Player activePlayer;
+    private List<Player> turns;
+    private CardStack stack;
+
+    
+}
