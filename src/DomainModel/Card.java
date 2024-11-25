@@ -1,6 +1,6 @@
 package DomainModel;
 
-import DomainModel.LogicGame.Player;
+import DomainModel.Game.Player;
 
 // Essential implements Cloneable to cast clone() without Exceptions
 public abstract class Card implements Cloneable {
