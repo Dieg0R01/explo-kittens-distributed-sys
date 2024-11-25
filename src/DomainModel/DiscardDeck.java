@@ -3,20 +3,18 @@ package DomainModel;
 import java.util.ArrayList;
 import java.util.List;
 
-public class instance extends Deck {
-    private static instance instance;
+public class DiscardDeck extends Deck {
+    private static DiscardDeck instance;
 
-    public static instance getinstance() {
+    private DiscardDeck() {
+        super(new ArrayList<Card>());
+    }
+    public static DiscardDeck getinstance() {
         if (instance == null) {
-            instance = new instance();
+            instance = new DiscardDeck();
         }
         return instance;
     }
-
-    private instance() {
-        super(new ArrayList<Card>());
-    }
-
     public static void tearDown() {
         instance = null;
     }
@@ -48,7 +46,7 @@ public class instance extends Deck {
         for (Card card : instance.getCards()) {
             if (card.getClass().equals(cardType)) {
                 retCard = card;
-                instance.deck.removeCard(retCard);
+                instance.removeCard(retCard);
                 return retCard;
             }
         }

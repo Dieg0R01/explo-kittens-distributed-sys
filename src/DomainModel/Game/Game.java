@@ -1,4 +1,8 @@
-package DomainModel;
+package DomainModel.Game;
+
+import DomainModel.DiscardDeck;
+import DomainModel.MainDeck;
+
 public class Game{
 
     private MainDeck mainDeck;

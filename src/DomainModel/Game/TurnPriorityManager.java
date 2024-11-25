@@ -1,4 +1,7 @@
-package DomainModel;
+package DomainModel.Game;
+
+import java.util.List;
+
 public class TurnPriorityManager{
     private PlayerManager playerManager;
     private Player currentPlayer;

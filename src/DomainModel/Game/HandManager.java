@@ -1,4 +1,10 @@
-package DomainModel;
+package DomainModel.Game;
+
+import DomainModel.Card;
+import DomainModel.MainDeck;
+
+import java.util.List;
+
 public class HandManager{
     private List<Card> hand;
     private List<Card> selectedCards;

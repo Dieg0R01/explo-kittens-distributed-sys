@@ -13,7 +13,6 @@ public class MainDeck extends Deck {
         super(new ArrayList<Card>());
         factory = new CardFactory();
     }
-
     public static MainDeck getInstance() {
         if (instance == null) {
             instance = new MainDeck();
@@ -25,8 +24,13 @@ public class MainDeck extends Deck {
     }
 
     @Override
+    public List<Card> getCards() {
+        return null;
+    }
+
+    @Override
     public void setCards(List<Card> cards) {
-        this.cards = cards; // Puedes personalizar esta lógica según sea necesario
+        this.cards = cards;
     }
 
     @Override

@@ -1,4 +1,7 @@
-package DomainModel;
+package DomainModel.Game;
+
+import java.util.List;
+
 public class PlayerManager{
     private List<Player> players;
     private List<Player> deadPlayers;

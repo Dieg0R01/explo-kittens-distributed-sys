@@ -1,10 +1,12 @@
+package DomainModel.Game;
+
 public class Player{
     private String name;
     private HandManager handManager;
     private PlayerManager playerManager;
     private boolean hasPriority;
 
-    
+
     /**
      * @return String return the name
      */

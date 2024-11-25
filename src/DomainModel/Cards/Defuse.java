@@ -1,7 +1,7 @@
 package DomainModel.Cards;
 
 import DomainModel.Card;
-import DomainModel.Game.Player;
+import DomainModel.Game.Game.Player;
 
 public class Defuse extends Card {
 
