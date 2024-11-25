@@ -1,3 +1,4 @@
+package DomainModel;
 public class HandManager{
     private List<Card> hand;
     private List<Card> selectedCards;

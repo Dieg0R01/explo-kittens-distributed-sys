@@ -1,3 +1,4 @@
+package DomainModel;
 public class Game{
 
     private MainDeck mainDeck;

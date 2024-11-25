@@ -1,3 +1,4 @@
+package DomainModel;
 public class TurnPriorityManager{
     private PlayerManager playerManager;
     private Player currentPlayer;

@@ -1,3 +1,4 @@
+package DomainModel;
 public class PlayerManager{
     private List<Player> players;
     private List<Player> deadPlayers;
