@@ -1,11 +1,12 @@
 package DomainModel.Cards;
 
+import DomainModel.C_Type;
 import DomainModel.Card;
-import DomainModel.Game.Game.Player;
+import DomainModel.Game.Player;
 
 public class ExplodingKitten extends Card {
     public ExplodingKitten(){
-        this.cardID = 0;
+        this.type = C_Type.EXPLODINGKITTEN;
     }
     public ExplodingKitten(String path){
         this.imagePath = path;

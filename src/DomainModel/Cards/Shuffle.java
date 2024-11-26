@@ -1,11 +1,12 @@
 package DomainModel.Cards;
 
+import DomainModel.C_Type;
 import DomainModel.Card;
-import DomainModel.Game.Game.Player;
+import DomainModel.Game.Player;
 
 public class Shuffle extends Card {
     public Shuffle(){
-        this.cardID = 0;
+        this.type = C_Type.SHUFFLE;
     }
     public Shuffle(String path){
         this.imagePath = path;

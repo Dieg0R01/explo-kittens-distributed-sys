@@ -1,11 +1,12 @@
 package DomainModel.Cards;
 
+import DomainModel.C_Type;
 import DomainModel.Card;
-import DomainModel.Game.Game.Player;
+import DomainModel.Game.Player;
 
 public class Nope extends Card {
     public Nope() {
-        this.cardID = 2;
+        this.type = C_Type.NOPE;
     }
     public Nope(String path) {
         this.imagePath = path;

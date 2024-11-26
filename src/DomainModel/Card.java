@@ -4,11 +4,11 @@ import DomainModel.Game.Player;
 
 // Essential implements Cloneable to cast clone() without Exceptions
 public abstract class Card implements Cloneable {
-    protected int cardID;
+    protected C_Type type;
     protected String imagePath;
 
-    public int getCardID() {
-        return cardID;
+    public C_Type getType() {
+        return type;
     }
     public String getImagePath() {
         return imagePath;

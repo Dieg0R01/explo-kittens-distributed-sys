@@ -1,11 +1,12 @@
 package DomainModel.Cards;
 
+import DomainModel.C_Type;
 import DomainModel.Card;
-import DomainModel.Game.Game.Player;
+import DomainModel.Game.Player;
 
 public class Favor extends Card {
     public Favor(){
-        this.cardID = 0;
+        this.type = C_Type.FAVOR;
     }
     public Favor(String path){
         this.imagePath = path;

@@ -1,11 +1,12 @@
 package DomainModel.Cards;
 
+import DomainModel.C_Type;
 import DomainModel.Card;
-import DomainModel.Game.Game.Player;
+import DomainModel.Game.Player;
 
 public class Skip extends Card {
     public Skip(){
-        this.cardID = 0;
+        this.type = C_Type.SKIP;
     }
     public Skip(String path){
         this.imagePath = path;

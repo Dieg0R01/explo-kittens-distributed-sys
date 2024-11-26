@@ -1,11 +1,12 @@
 package DomainModel.Cards;
 
+import DomainModel.C_Type;
 import DomainModel.Card;
-import DomainModel.Game.Game.Player;
+import DomainModel.Game.Player;
 
 public class Attack extends Card {
     public Attack() {
-        this.cardID = 3;
+        this.type = C_Type.ATTACK;
     }
     public Attack(String path){
         this();

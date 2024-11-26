@@ -1,7 +1,7 @@
 package DomainModel.Cards;
 
 import DomainModel.Card;
-import DomainModel.Game.Game.Player;
+import DomainModel.Game.Player;
 
 public class Cat extends Card {
     private int cardIcon;
@@ -16,8 +16,9 @@ public class Cat extends Card {
     public int getCardIcon() {
         return cardIcon;
     }
-    public void setCardIcon(int cardIcon) {
+    public Card setCardIcon(int cardIcon) {
         this.cardIcon = cardIcon;
+        return this;
     }
 
     @Override

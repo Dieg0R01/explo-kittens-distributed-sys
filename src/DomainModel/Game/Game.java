@@ -1,5 +1,6 @@
 package DomainModel.Game;
 
+import DomainModel.CardStack;
 import DomainModel.DiscardDeck;
 import DomainModel.MainDeck;
 

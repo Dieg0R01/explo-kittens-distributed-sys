@@ -39,9 +39,14 @@ public abstract class Deck {
         return addCard(atStart ? 0 : cards.size(), card);
     }
 
-//    public boolean addAll(List<Card> cardsToAdd) {
-//        return this.cards.addAll(cardsToAdd);
-//    }
+    /***
+     * Inserts a List<Card> in the list Deck
+     * @param cardsToAdd
+     * @return true if the insert was successful, false if not
+     */
+    public boolean addAll(List<Card> cardsToAdd) {
+        return this.cards.addAll(cardsToAdd);
+    }
 
     /***
      * Removes the first occurrence of the specified element Card from this list, if it is present
@@ -56,19 +61,11 @@ public abstract class Deck {
         return this.cards.size();
     }
 
-    public abstract List<Card> getCards();
-
-    public abstract void setCards(List<Card> cards);
-
-    public void insertCard(Card card, int position) {
-        addCard(position, card);
+    public List<Card> getCards(){
+        return this.cards;
     }
-
-    public abstract Card draw();
 
     public void shuffleDeck() {
         Collections.shuffle(cards);
     }
-
-
 }
