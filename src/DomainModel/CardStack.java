@@ -1,7 +1,5 @@
 package DomainModel;
 
-import DomainModel.Game.Player;
-
 import java.util.List;
 import java.util.Stack;
 

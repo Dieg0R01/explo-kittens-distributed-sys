@@ -1,10 +1,12 @@
-package DomainModel;
-
-import DomainModel.Game.Player;
-import DomainModel.Game.PlayerManager;
+package BusinessLogic;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import DomainModel.C_Type;
+import DomainModel.Card;
+import DomainModel.CardStack;
+import DomainModel.Player;
 
 public class TurnManager {
     private static TurnManager turnManager;

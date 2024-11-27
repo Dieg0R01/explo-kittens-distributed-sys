@@ -1,9 +1,10 @@
-package DomainModel;
-
-import DomainModel.Game.Player;
+package BusinessLogic;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import DomainModel.CardStack;
+import DomainModel.Player;
 
 public class PriorityManager {
     private static PriorityManager instance;

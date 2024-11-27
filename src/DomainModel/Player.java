@@ -1,11 +1,22 @@
-package DomainModel.Game;
+package DomainModel;
+
+import BusinessLogic.HandManager;
+import BusinessLogic.PlayerManager;
 
 public class Player{
     private String name;
-    private HandManager handManager;
+    private HandManager hand;
     private PlayerManager playerManager;
     private boolean hasPriority;
 
+    public Player() {
+		this.name = "default";
+		hand = new HandManager();
+	}
+
+	public Player(String name) {
+		this.name = name;
+	}
 
     /**
      * @return String return the name
@@ -24,8 +35,8 @@ public class Player{
     /**
      * @return HandManager return the handManager
      */
-    public HandManager getHandManager() {
-        return handManager;
+    public Hand getHandManager() {
+        return hand;
     }
 
     /**
@@ -62,5 +73,7 @@ public class Player{
     public void setHasPriority(boolean hasPriority) {
         this.hasPriority = hasPriority;
     }
+
+
 
 }

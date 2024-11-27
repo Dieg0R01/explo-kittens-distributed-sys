@@ -1,4 +1,4 @@
-package DomainModel.Game;
+package BusinessLogic;
 
 import DomainModel.CardStack;
 import DomainModel.DiscardDeck;

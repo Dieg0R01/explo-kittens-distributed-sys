@@ -1,11 +1,19 @@
-package DomainModel.Game;
+package BusinessLogic;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import DomainModel.Player;
 
 public class PlayerManager{
     private List<Player> players;
     private List<Player> deadPlayers;
 
+
+    public PlayerManager(){
+        players = new ArrayList<Player>();
+    }
+    
     /**
      * @return List<Player> return the players
      */

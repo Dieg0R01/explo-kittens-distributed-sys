@@ -2,7 +2,7 @@ package DomainModel.Cards;
 
 import DomainModel.C_Type;
 import DomainModel.Card;
-import DomainModel.Game.Player;
+import DomainModel.Player;
 
 public class Shuffle extends Card {
     public Shuffle(){
