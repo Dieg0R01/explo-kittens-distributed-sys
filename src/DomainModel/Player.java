@@ -1,5 +1,7 @@
 package DomainModel;
 
+import java.util.List;
+
 import BusinessLogic.HandManager;
 import BusinessLogic.PlayerManager;
 
@@ -9,11 +11,17 @@ public class Player{
     private PlayerManager playerManager;
     private boolean hasPriority;
 
+    /**
+     * Constructor for a Player without a name
+     */
     public Player() {
 		this.name = "default";
 		hand = new HandManager();
 	}
 
+    /**
+     * Constructor for a Player without name "name"
+     */
 	public Player(String name) {
 		this.name = name;
 	}
@@ -35,15 +43,19 @@ public class Player{
     /**
      * @return HandManager return the handManager
      */
-    public Hand getHandManager() {
+    public HandManager getHandManager() {
         return hand;
+    }
+
+    public List<Card> getHand(){
+        return hand.getHand();
     }
 
     /**
      * @param handManager the handManager to set
      */
     public void setHandManager(HandManager handManager) {
-        this.handManager = handManager;
+        this.hand = handManager;
     }
 
     /**
@@ -74,6 +86,11 @@ public class Player{
         this.hasPriority = hasPriority;
     }
 
+    public Card drawCard(){
+        return hand.draw();
+    }
 
-
+    public void addDefuseCardToHand(){
+        this.hand.addDefuseCard();
+    }
 }

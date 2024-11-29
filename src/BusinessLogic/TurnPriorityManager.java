@@ -3,6 +3,7 @@ package BusinessLogic;
 import java.util.List;
 
 import DomainModel.Player;
+import DomainModel.CardStack;
 
 public class TurnPriorityManager{
     private PlayerManager playerManager;
@@ -79,6 +80,15 @@ public class TurnPriorityManager{
      */
     public void setStack(CardStack stack) {
         this.stack = stack;
+    }
+
+    public void endTurnAndDraw(){
+        // Is this function for this class??
+    }
+
+    public void endTurnWithoutDrawing(){
+
+        // Is this function for this class??
     }
 
 }

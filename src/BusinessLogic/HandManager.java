@@ -1,6 +1,7 @@
 package BusinessLogic;
 
 import DomainModel.*;
+import DomainModel.Cards.Cat;
 import DomainModel.Cards.Cases.FiveCardBundle;
 import DomainModel.Cards.Cases.ThreeCardBundle;
 import DomainModel.Cards.Cases.TwoCardBundle;
@@ -85,38 +86,37 @@ public class HandManager{
 
     public void selectCard(int i)  {
 
-		Card toMove;
+		Card toMove = null;
 		try{
 			toMove = this.hand.remove(i);
 		}catch(IndexOutOfBoundsException e){
 			e.printStackTrace();
 		}
 		
-		
 		this.selectedCards.add(toMove);
 	}
 
 	public void moveSelectedToStack() {
-		if (this.selectedCards.size() == 0) {
-			throw new NoCardsToMoveException();
-		}
-
-		if (this.allNormalCards()) {
-			if (TwoCardBundle.isValidBundle(selectedCards)) {
-				this.cardStack.moveCardsToStack(this.makeBundle(2));
-			} else if (ThreeCardBundle.isValidBundle(selectedCards)) {
-				this.cardStack.moveCardsToStack(this.makeBundle(3));
-			} else if (FiveCardBundle.isValidBundle(selectedCards)) {
-				this.cardStack.moveCardsToStack(this.makeBundle(5));
+		if (this.selectedCards.size() != 0) {
+			if (this.allNormalCards()) {
+				if (TwoCardBundle.isValidBundle(selectedCards)) {
+					this.cardStack.moveCardsToStack(this.makeBundle(2));
+				} else if (ThreeCardBundle.isValidBundle(selectedCards)) {
+					this.cardStack.moveCardsToStack(this.makeBundle(3));
+				} else if (FiveCardBundle.isValidBundle(selectedCards)) {
+					this.cardStack.moveCardsToStack(this.makeBundle(5));
+				}
+	
+			} else {
+				this.cardStack.moveCardsToStack(this.selectedCards);
 			}
-
-		} else {
-			this.cardStack.moveCardsToStack(this.selectedCards);
+			this.selectedCards.clear();
 		}
-		this.selectedCards.clear();
+
+		
 	}
 
-	private List<Card> makeBundle(int sizeOfBundle) throws InvalidBundleException {
+	private List<Card> makeBundle(int sizeOfBundle) {
 		ArrayList<Card> toSendToStack = new ArrayList<Card>();
 
 		if (sizeOfBundle == 2) {
@@ -131,7 +131,7 @@ public class HandManager{
 
 	private boolean allNormalCards() {
 		for (Card card : selectedCards) {
-			if (!(card instanceof NormalCard)) {
+			if (!(card instanceof Cat)) {
 				return false;
 			}
 		}
@@ -139,7 +139,7 @@ public class HandManager{
 	}
 
 	public void addDefuseCard() {
-		this.hand.add(new CardFactory().createCard(CardFactory.DEFUSE_CARD));
+		this.hand.add(new CardFactory().createCard(C_Type.DEFUSE));
 	}
 
 	public void addCards(List<Card> cards) {

@@ -1,17 +1,33 @@
 package BusinessLogic;
 
+import java.util.List;
+import java.util.Map;
+
+import DomainModel.Card;
 import DomainModel.CardStack;
 import DomainModel.DiscardDeck;
 import DomainModel.MainDeck;
+import DomainModel.Player;
 
 public class Game{
 
     private MainDeck mainDeck;
     private DiscardDeck discardDeck;
     private PlayerManager playerManager;
-    private TurnPriorityManager turnPriorityManager;
+    private TurnManager turnManager;
+    private PriorityManager priorityManager;
     private CardStack stack;
 
+    public Game(){
+        MainDeck.tearDown();
+		mainDeck = MainDeck.getInstance();
+		priorityManager = PriorityManager.getInstance();
+		// TurnManager.InstantiateLogger(); !OJO¡ QUE HACEMOS CON LOS LOGGERS
+		turnManager = TurnManager.getInstance();
+    }
+    protected Game(int n){
+        
+    }
     /**
      * @return MainDeck return the mainDeck
      */
@@ -54,20 +70,26 @@ public class Game{
         this.playerManager = playerManager;
     }
 
+    public TurnManager getTurnManager() {
+		return turnManager;
+	}
+
+    
     /**
+     * NO SE USA LA CLASE TURNPRIORITYMANAGER - OJOOO
      * @return TurnPriorityManager return the turnPriorityManager
-     */
-    public TurnPriorityManager getTurnPriorityManager() {
-        return turnPriorityManager;
+     
+    public TurnManager getTurnPriorityManager() {
+        return turnManager;
     }
 
     /**
      * @param turnPriorityManager the turnPriorityManager to set
-     */
-    public void setTurnPriorityManager(TurnPriorityManager turnPriorityManager) {
-        this.turnPriorityManager = turnPriorityManager;
-    }
-
+     
+    public void setTurnPriorityManager(TurnManager turnManager) {
+        this.turnManager = turnManager;
+    }*/
+    
     /**
      * @return CardStack return the stack
      */
@@ -82,4 +104,43 @@ public class Game{
         this.stack = stack;
     }
 
+    public void start(int numPlayers) {
+		if (numPlayers > 2 || numPlayers < 5) {
+
+			mainDeck.initStartingDeck();
+            playerManager = new PlayerManager();
+            playerManager.addPlayers(numPlayers);
+            priorityManager.addPlayers(playerManager.getPlayers());
+            playerManager.distributePlayersInitialHand();
+            mainDeck.populateDeck(numPlayers);
+            turnManager.setPlayerManager(playerManager);
+		}
+		
+	}
+
+    public Map<Player, List<Card>> getPlayerHands() {
+		return playerManager.getHands();
+	}
+
+    public boolean isMainDeckEmpty() {
+		return (mainDeck.getCardCount() == 0);
+	}
+
+    public void nextTurn() {
+		turnManager.endTurnAndDraw();
+		priorityManager.nextPlayer();
+	}
+
+    public Player getActivePlayer() {
+		return priorityManager.getActivePlayer();
+	}
+    public Player getCurrentPlayer() {
+		return turnManager.getCurrentPlayer();
+	}
+
+	public List<Player> getPlayers() {
+		return playerManager.getPlayers();
+	}
+
+	
 }
