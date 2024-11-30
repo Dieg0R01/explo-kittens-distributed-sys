@@ -118,6 +118,10 @@ public class Game{
 		
 	}
 
+    public void start(List<Players> players){
+        
+    }
+
     public Map<Player, List<Card>> getPlayerHands() {
 		return playerManager.getHands();
 	}
