@@ -15,6 +15,6 @@ public abstract class Card implements Cloneable {
         return this.getClass().getName();
     }
 
-    abstract public void cardAction(Player p1, Player p2);
-    abstract public Card clone();
+    public abstract void cardAction(Player p1, Player p2);
+    public abstract Card clone();
 }

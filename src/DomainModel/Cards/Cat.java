@@ -13,7 +13,7 @@ public class Cat extends Card {
         this();
         this.imagePath = path;
     }
-    public int getCardIcon() {
+    public int getCatIcon() {
         return cardIcon;
     }
     public Card setCardIcon(int cardIcon) {

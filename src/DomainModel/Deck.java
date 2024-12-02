@@ -51,10 +51,11 @@ public abstract class Deck {
     /***
      * Removes the first occurrence of the specified element Card from this list, if it is present
      * @param card Card
-     * @return true if the card was contained and lately removed, false if wasn't successfully or wasn't contained
+     * @return the card if it was removed successfully
      */
-    public boolean removeCard(Card card) {
-        return this.cards.remove(card);
+    public Card removeCard(Card card) {
+        if (this.cards.remove(card)) return card;
+        else return null;
     }
 
     public int getCardCount() {

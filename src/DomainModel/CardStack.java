@@ -8,7 +8,7 @@ public class CardStack {
     private Stack<Card> stack;
 
     MainDeck mainDeck = MainDeck.getInstance();
-    DiscardDeck discardDeck = DiscardDeck.getinstance();
+    DiscardDeck discardDeck = DiscardDeck.getInstance();
 
     private CardStack() {
         stack = new Stack<>();
