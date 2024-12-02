@@ -1,11 +1,12 @@
 package DomainModel;
 
+import java.io.Serializable;
 import java.util.List;
 
 import BusinessLogic.HandManager;
 import BusinessLogic.PlayerManager;
 
-public class Player{
+public class Player implements Serializable {
     private String name;
     private HandManager hand;
     private PlayerManager playerManager;
