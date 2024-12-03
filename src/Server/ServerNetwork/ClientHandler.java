@@ -2,36 +2,41 @@ package Server.ServerNetwork;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import BusinessLogic.Game;
 import DomainModel.Player;
 import Server.GameLogic.Room;
+
 public class ClientHandler implements Runnable{
     private final Socket client;
-    private ObjectInputStream in;
-    private PrintStream out;
     private String currentRoomId; // Storage the room id associated to the client when JOIN
     private Player playerHandled;
+    private ExecutorService gameExecutor;
 
     public ClientHandler(Socket c) {
         this.client = c;
+        gameExecutor = Executors.newSingleThreadExecutor(); // execute sequential way
     }
 
+    // deliver logic /////////////////////////////////////////////////////////
     @Override
     public void run(){
         try{
             // Input/Output flows
-            in = new ObjectInputStream(client.getInputStream());
-            out = new PrintStream(client.getOutputStream());
+            ObjectInputStream in = new ObjectInputStream(client.getInputStream());
+            PrintStream out = new PrintStream(client.getOutputStream());
 
             // First message maybe the instance of Player
             playerHandled = (Player) in.readObject();
-            processPlayer(playerHandled);
+            processPlayer(playerHandled, out);
 
             // Other message instructions
             String message;
             while ((message = (String) in.readObject()) != null) {
-                processMessage(message);
+                String finalMessage = message;
+                gameExecutor.submit(() -> processMessage(finalMessage, out));
             }
 
         } catch (Exception e) {
@@ -39,7 +44,8 @@ public class ClientHandler implements Runnable{
         }
     }
 
-    private void processPlayer(Player player) {
+    // business logic ///////////////////////////////////////////////////////
+    private void processPlayer(Player player, PrintStream out) {
         System.out.println("Welcome player: " + player.getName());
         // Set id in case pre instance room (to no creator players)
         Room room = ServerNet.roomManager.getRoom(currentRoomId);
@@ -53,38 +59,52 @@ public class ClientHandler implements Runnable{
      * JOIN f47ac10b-58cc-4372-a567-0e02b2c3d479
      * EXIT
      */
-    private void processMessage(String message){
+    private void processMessage(String message, PrintStream out){
         if(message.startsWith("CREATE")){
-            String[] parts = message.split("\\s");
-            int maxPlayers = Integer.parseInt(parts[1]);
-            String roomId = ServerNet.roomManager.createRoom(maxPlayers, playerHandled);
-            out.println("room_created:" + roomId);
-            currentRoomId = roomId; // storage id current room linked
+            handleCreateRoom(message, out);
         }else if(message.startsWith("JOIN")){
-            String[] parts = message.split("\\s");
-            String roomId = parts[1];
-            Room room = ServerNet.roomManager.joinRoom(roomId, playerHandled, out);
-            if(room != null){
-                out.println("joined_room:" + roomId);
-                ServerNet.roomManager.joinRoom(roomId, playerHandled, out);
-                if(room.isReadyToStart()){
-                    ServerNet.pool.execute(startGame(room));
-                }
-            }else{
-                out.println("error:room_full_or_not_found");
-            }
+            handleJoinRoom(message, out);
         }else if(message.startsWith("EXIT")){
-            if (currentRoomId != null) {
-                Room room = ServerNet.roomManager.getRoom(currentRoomId);
-                Player player = room.getPlayer(client.getInetAddress().getHostAddress());
-                room.removePlayer(player);
-                out.println("exited_room:" + currentRoomId);
-                currentRoomId = null;
-            } else {
-                out.println("error:not_in_room");
-            }
+            handleExitRoom(out);
         }
     }
+
+    private void handleCreateRoom(String message, PrintStream out) {
+        String[] parts = message.split("\\s");
+        int maxPlayers = Integer.parseInt(parts[1]);
+        String roomId = ServerNet.roomManager.createRoom(maxPlayers, playerHandled);
+        out.println("room_created:" + roomId);
+        currentRoomId = roomId; // storage id current room linked
+    }
+
+    private void handleJoinRoom(String message, PrintStream out) {
+        String[] parts = message.split("\\s");
+        String roomId = parts[1];
+        Room room = ServerNet.roomManager.joinRoom(roomId, playerHandled, out);
+        if (room != null) {
+            out.println("joined_room:" + roomId);
+            currentRoomId = roomId;
+
+            if (room.isReadyToStart()) {
+                gameExecutor.submit(() -> startGame(room));
+            }
+        } else {
+            out.println("error:room_full_or_not_found");
+        }
+    }
+
+    private void handleExitRoom(PrintStream out) {
+        if (currentRoomId != null) {
+            Room room = ServerNet.roomManager.getRoom(currentRoomId);
+            room.removePlayer(playerHandled);
+            out.println("exited_room:" + currentRoomId);
+            currentRoomId = null;
+        } else {
+            out.println("error:not_in_room");
+        }
+    }
+
+
     private Runnable startGame(Room room){
         if (room.isReadyToStart()){
             System.out.println("Game has started on room: " + room.getId());
