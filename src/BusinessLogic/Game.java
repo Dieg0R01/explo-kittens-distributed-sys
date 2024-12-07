@@ -8,7 +8,6 @@ import DomainModel.CardStack;
 import DomainModel.DiscardDeck;
 import DomainModel.MainDeck;
 import DomainModel.Player;
-import Server.GameLogic.Room;
 
 public class Game{
 
@@ -25,6 +24,9 @@ public class Game{
 		priorityManager = PriorityManager.getInstance();
 		// TurnManager.InstantiateLogger(); !OJO¡ QUE HACEMOS CON LOS LOGGERS
 		turnManager = TurnManager.getInstance();
+    }
+    protected Game(int n){
+        
     }
     /**
      * @return MainDeck return the mainDeck
@@ -102,9 +104,6 @@ public class Game{
         this.stack = stack;
     }
 
-    /* 
-    NOT USED
-    
     public void start(int numPlayers) {
 		if (numPlayers > 2 || numPlayers < 5) {
 
@@ -118,25 +117,10 @@ public class Game{
 		}
 		
 	}
-    */
 
-    public void start(Room room) {
-        int numPlayers = room.getPlayersList().size();
-
-		if (numPlayers > 2 || numPlayers < 5) {
-
-			mainDeck.initStartingDeck();
-            playerManager = new PlayerManager();
-            playerManager.setPlayers(room.getPlayersList());
-            priorityManager.addPlayers(playerManager.getPlayers());
-            playerManager.distributePlayersInitialHand();
-            mainDeck.populateDeck(numPlayers);
-            turnManager.setPlayerManager(playerManager);
-		}
-		
-	}
-
-    
+    public void start(List<Player> players){
+        
+    }
 
     public Map<Player, List<Card>> getPlayerHands() {
 		return playerManager.getHands();

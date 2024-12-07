@@ -28,6 +28,10 @@ public class Room {
         return (List<Player>)playerStreamMap.keySet();
     }
 
+    public int getMaxPlayers() {
+        return maxPlayers;
+    }
+
     public Player getPlayer(String playerName) {
         for (Player player : playerStreamMap.keySet()) {
             if (player.getName().equals(playerName)) {
@@ -53,6 +57,10 @@ public class Room {
 
     public boolean isReadyToStart() {
         return isFull();
+    }
+
+    public boolean isHost(Player player) {
+        return this.creator.equals(player);
     }
 
     public void removePlayer(Player player){

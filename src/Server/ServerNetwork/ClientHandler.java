@@ -8,11 +8,13 @@ import java.util.concurrent.Executors;
 import BusinessLogic.Game;
 import DomainModel.Player;
 import Server.GameLogic.Room;
+import Server.GameLogic.RoomManager;
 
 public class ClientHandler implements Runnable{
     private final Socket client;
     private String currentRoomId; // Storage the room id associated to the client when JOIN
     private Player playerHandled;
+    private RoomManager roomManager;
     private ExecutorService gameExecutor;
 
     public ClientHandler(Socket c) {
@@ -49,10 +51,6 @@ public class ClientHandler implements Runnable{
         System.out.println("Welcome player: " + player.getName());
         // Set id in case pre instance room (to no creator players)
        // AQUÍ SE DEBERÍA METER QUE UN PLAYER SE AÑADA A LA LOBBY EN CUANTO SE CREA
-        Room room = ServerNet.roomManager.getRoom(currentRoomId);
-        if (room != null) {
-            room.addPlayer(player, out);
-        }
     }
 
     /* Messages to proccess example:
@@ -67,37 +65,60 @@ public class ClientHandler implements Runnable{
             handleJoinRoom(message, out);
         }else if(message.startsWith("EXIT")){
             handleExitRoom(out);
+        }else if(message.startsWith("START")){
+            handleStartGame(out);
         }
     }
 
     private void handleCreateRoom(String message, PrintStream out) {
-        String[] parts = message.split("\\s");
-        int maxPlayers = Integer.parseInt(parts[1]);
-        String roomId = ServerNet.roomManager.createRoom(maxPlayers, playerHandled);
+        String[] parts = message.split("\\s"); // Example: "CREATE 4"
+        int maxPlayers = Integer.parseInt(parts[1]); // Extract the maximum number of players
+
+        // The client executing this method is the creator/host of the room
+        String roomId = new RoomManager().createRoom(maxPlayers, playerHandled);
+
         out.println("room_created:" + roomId);
-        currentRoomId = roomId; // storage id current room linked
+        currentRoomId = roomId; // Save the ID of the current room in the client handler
     }
 
+
     private void handleJoinRoom(String message, PrintStream out) {
-        String[] parts = message.split("\\s");
-        String roomId = parts[1];
-        Room room = ServerNet.roomManager.joinRoom(roomId, playerHandled, out);
+        // Check if roomManager is initialized
+        if (roomManager == null) {
+            out.println("error:no_room_manager_available");
+            return; // Exit early
+        }
+
+        // Parse the message to get the room ID
+        String[] parts = message.split("\\s"); // Example: "JOIN f47ac10b-58cc-4372-a567-0e02b2c3d479"
+        String roomId = parts[1]; // Extract the room ID
+
+        // Attempt to join the room
+        Room room = roomManager.joinRoom(roomId, playerHandled, out);
         if (room != null) {
             out.println("joined_room:" + roomId);
-            currentRoomId = roomId;
+            currentRoomId = roomId;  // Save the ID of the current room in the client handler
 
-            if (room.isReadyToStart()) {
-                gameExecutor.submit(() -> startGame(room));
-            }
+
         } else {
             out.println("error:room_full_or_not_found");
         }
     }
 
+    private void handleStartGame(PrintStream out) {
+        Room room = roomManager.getRoom(currentRoomId);
+        if (room.isReadyToStart()) {
+            gameExecutor.submit(() -> startGame(room, out));
+        }
+    }
+
     private void handleExitRoom(PrintStream out) {
+        // Check if a room was attached to client
         if (currentRoomId != null) {
-            Room room = ServerNet.roomManager.getRoom(currentRoomId);
+            // Remove player from room
+            Room room = roomManager.getRoom(currentRoomId);
             room.removePlayer(playerHandled);
+
             out.println("exited_room:" + currentRoomId);
             currentRoomId = null;
         } else {
@@ -106,19 +127,29 @@ public class ClientHandler implements Runnable{
     }
 
 
-    private Runnable startGame(Room room){
-        if (room.isReadyToStart()){
-            System.out.println("Game has started on room: " + room.getId());
-
-            for (PrintStream playerStream : room.getPlayerStreams().values()){
-                playerStream.println("Game has started on room: " + room.getId());
-            }
-
-            //<WARNING> game flow
-
-            Game game = new Game();
-            game.start(room);
+    private Runnable startGame(Room room, PrintStream out){
+        if (!room.isHost(playerHandled)) {
+            out.println("error:player_not_host");
+            return null; // If not the host, do not allow the game to start
         }
+        // Check if there are enough players to start the game
+        if (room.getPlayersList().size() < 2) {
+            System.out.println("Not enough players to start the game.");
+            return null;
+        }
+        System.out.println("Game has started in room: " + room.getId());
+        for (PrintStream playerStream : room.getPlayerStreams().values()) {
+            playerStream.println("Game has started in room: " + room.getId());
+        }
+
+        //<WARNING> game flow
+
+        Game game = new Game();
+        game.start(room.getMaxPlayers());
+
+        //Game game = new Game(room);
+        //game.start();
+
         return null;
     }
 }

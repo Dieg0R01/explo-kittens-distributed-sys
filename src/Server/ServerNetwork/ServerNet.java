@@ -11,7 +11,6 @@ import Server.GameLogic.RoomManager;
 public class ServerNet {
     private static final int DEFAULT_PORT = 55555; // Server Port
     public static ExecutorService pool; // Pool of threads to manage all clients and movements in the game
-    public static RoomManager roomManager;
 
     private int port;
     
@@ -20,7 +19,6 @@ public class ServerNet {
     public ServerNet(int port){
         this.port = port;
         pool = Executors.newCachedThreadPool();
-        roomManager = new RoomManager();
     }
 
     /**
@@ -42,6 +40,7 @@ public class ServerNet {
                 
             }
         }catch(IOException ioe){
+            System.out.println("An IOException occurred: " + ioe.getMessage());
             ioe.printStackTrace();
         }finally{
             pool.shutdown();
