@@ -19,6 +19,7 @@ public class PlayerManager{
      */
     public PlayerManager(){
         players = new ArrayList<Player>();
+        deadPlayers = new ArrayList<Player>();
     }
     
     /**

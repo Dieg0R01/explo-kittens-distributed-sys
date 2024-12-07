@@ -34,6 +34,7 @@ public class ClientHandler implements Runnable{
             // First message maybe the instance of Player
             String playerName = (String) in.readObject();
             (playerHandled = new Player()).setName(playerName);
+            playerHandled.setSocket(client);
             processPlayer(playerHandled, out);
 
             
