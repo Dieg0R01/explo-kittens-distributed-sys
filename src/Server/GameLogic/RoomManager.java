@@ -3,31 +3,30 @@ package Server.GameLogic;
 import DomainModel.Player;
 
 import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class RoomManager {
-    private final Map<String, Room> rooms = new ConcurrentHashMap<>();
-    private final List<Player> Lobby = Collections.synchronizedList(new ArrayList<Player>());
+    private final Map<String, Room> rooms = new HashMap<>();
 
-    // ------------------- ROOMS --------------------------
     public synchronized String createRoom(int maxPlayers, Player creator) {
         String roomId = UUID.randomUUID().toString(); // Generates a unique id
         rooms.put(roomId, new Room(roomId, maxPlayers, creator));
         return roomId;
     }
 
-    public synchronized Room joinRoom(String roomId, Player playerName, PrintStream stream) {
+    public boolean joinRoom(String roomId, Player playerName, PrintStream out) {
         Room room = rooms.get(roomId);
-        if (room == null || room.isFull()) {
-            return null; // Room not found or full
+        if (room == null) {
+            out.println("error:room_not_found");
+            return false;
+        } else if (room.isFull()){
+            out.println("error:room_is_full");
+            return false;
         }
-        room.addPlayer(playerName, stream);
-        return room;
+        room.addPlayer(playerName, out);
+        return true;
     }
 
     public synchronized void removeRoom(String roomId) {
@@ -36,16 +35,6 @@ public class RoomManager {
 
     public Room getRoom(String roomId) {
         return rooms.get(roomId);
-    }
-
-    //----------------------------- LOBBY -----------------------
-
-    public synchronized void enterLobby(Player pl){
-        Lobby.add(pl);
-    }
-
-    public synchronized void exitLobby(Player pl){
-        Lobby.remove(pl);
     }
 
 }

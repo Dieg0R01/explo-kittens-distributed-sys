@@ -63,10 +63,12 @@ public class ClientHandler implements Runnable{
             handleCreateRoom(message, out);
         }else if(message.startsWith("JOIN")){
             handleJoinRoom(message, out);
-        }else if(message.startsWith("EXIT")){
-            handleExitRoom(out);
         }else if(message.startsWith("START")){
             handleStartGame(out);
+        }else if(message.startsWith("EXIT")){
+            handleExitRoom(out);
+        }else if(message.startsWith("DISCONNECT")){
+            // Manage disconnect casewwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
         }
     }
 
@@ -94,14 +96,10 @@ public class ClientHandler implements Runnable{
         String roomId = parts[1]; // Extract the room ID
 
         // Attempt to join the room
-        Room room = roomManager.joinRoom(roomId, playerHandled, out);
-        if (room != null) {
+        boolean isJoined = roomManager.joinRoom(roomId, playerHandled, out);
+        if (isJoined) {
             out.println("joined_room:" + roomId);
             currentRoomId = roomId;  // Save the ID of the current room in the client handler
-
-
-        } else {
-            out.println("error:room_full_or_not_found");
         }
     }
 

@@ -106,7 +106,6 @@ public class Game{
 
     public void start(int numPlayers) {
 		if (numPlayers > 2 || numPlayers < 5) {
-
 			mainDeck.initStartingDeck();
             playerManager = new PlayerManager();
             playerManager.addPlayers(numPlayers);
@@ -117,10 +116,6 @@ public class Game{
 		}
 		
 	}
-
-    public void start(List<Player> players){
-        
-    }
 
     public Map<Player, List<Card>> getPlayerHands() {
 		return playerManager.getHands();
