@@ -32,7 +32,8 @@ public class ClientHandler implements Runnable{
             PrintStream out = new PrintStream(client.getOutputStream());
 
             // First message maybe the instance of Player
-            playerHandled = (Player) in.readObject();
+            String playerName = (String) in.readObject();
+            (playerHandled = new Player()).setName(playerName);
             processPlayer(playerHandled, out);
 
             
@@ -117,6 +118,9 @@ public class ClientHandler implements Runnable{
         // Check if there are enough players to start the game
         if (room.getPlayersList().size() < 2) {
             System.out.println("Not enough players to start the game.");
+            return;
+        } else if ((room.getMaxPlayers() > room.getPlayersList().size())) {
+            System.out.println("Too many players to start the game.");
             return;
         }
         if (room.isReadyToStart()) {
