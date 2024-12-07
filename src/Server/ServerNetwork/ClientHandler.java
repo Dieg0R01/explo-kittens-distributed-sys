@@ -7,6 +7,7 @@ import java.util.concurrent.Executors;
 
 import BusinessLogic.Game;
 import DomainModel.Player;
+import Server.GameLogic.GameSession;
 import Server.GameLogic.Room;
 import Server.GameLogic.RoomManager;
 
@@ -34,15 +35,18 @@ public class ClientHandler implements Runnable{
             playerHandled = (Player) in.readObject();
             processPlayer(playerHandled, out);
 
+            
             // Other message instructions
             String message;
-            while ((message = (String) in.readObject()) != null) {
+            while ((message = (String) in.readObject()) != null && !message.startsWith("DISCONNECT")) {
                 String finalMessage = message;
                 gameExecutor.submit(() -> processMessage(finalMessage, out));
             }
 
         } catch (Exception e) {
             e.printStackTrace();
+        }finally{
+            cerrarConexion();
         }
     }
 
@@ -68,7 +72,7 @@ public class ClientHandler implements Runnable{
         }else if(message.startsWith("EXIT")){
             handleExitRoom(out);
         }else if(message.startsWith("DISCONNECT")){
-            // Manage disconnect case
+            handleDisconnect(out);
         }
     }
 
@@ -105,9 +109,20 @@ public class ClientHandler implements Runnable{
 
     private void handleStartGame(PrintStream out) {
         Room room = roomManager.getRoom(currentRoomId);
-        if (room.isReadyToStart()) {
-           startGame(room, out);
+        
+        if (!room.isHost(playerHandled)) {
+            out.println("error:player_not_host");
+            return; // If not the host, do not allow the game to start
         }
+        // Check if there are enough players to start the game
+        if (room.getPlayersList().size() < 2) {
+            System.out.println("Not enough players to start the game.");
+            return;
+        }
+        if (room.isReadyToStart()) {
+           startGame(room);
+         }
+        
     }
 
     private void handleExitRoom(PrintStream out) {
@@ -125,27 +140,41 @@ public class ClientHandler implements Runnable{
     }
 
 
-    private void startGame(Room room, PrintStream out){
-        if (!room.isHost(playerHandled)) {
-            out.println("error:player_not_host");
-            return null; // If not the host, do not allow the game to start
+    private void handleDisconnect(PrintStream out){
+        System.out.println("Player disconnected: " + playerHandled.getName());
+
+        if (currentRoomId != null) {
+            Room room = roomManager.getRoom(currentRoomId);
+            if(room != null){
+                room.removePlayer(playerHandled);
+            }
+            out.println("exited_room: " + currentRoomId);
+            currentRoomId = null;
         }
-        // Check if there are enough players to start the game
-        if (room.getPlayersList().size() < 2) {
-            System.out.println("Not enough players to start the game.");
-            return null;
-        }
+        out.println("disconnected_from_server");
+       
+    }
+
+    public void startGame(Room room){
         System.out.println("Game has started in room: " + room.getId());
+
         for (PrintStream playerStream : room.getPlayerStreams().values()) {
             playerStream.println("Game has started in room: " + room.getId());
         }
 
-        //<WARNING> game flow
+        GameSession gameSession = new GameSession(room);
+        gameExecutor.execute(gameSession);
+    }
 
-        //Game game = new Game();
-        //game.start(room);
-
-        gameExecutor.execute(new GameSession());
+    private void cerrarConexion(){
+    
+        try{
+            client.close();
+            gameExecutor.shutdown();
+            System.out.println("Closing connection with client: " + playerHandled.getName());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         
     }
 }

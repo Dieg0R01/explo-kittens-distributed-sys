@@ -8,6 +8,7 @@ import DomainModel.CardStack;
 import DomainModel.DiscardDeck;
 import DomainModel.MainDeck;
 import DomainModel.Player;
+import Server.GameLogic.Room;
 
 public class Game{
 
@@ -104,11 +105,29 @@ public class Game{
         this.stack = stack;
     }
 
+    /* 
     public void start(int numPlayers) {
 		if (numPlayers > 2 || numPlayers < 5) {
 			mainDeck.initStartingDeck();
             playerManager = new PlayerManager();
             playerManager.addPlayers(numPlayers);
+            priorityManager.addPlayers(playerManager.getPlayers());
+            playerManager.distributePlayersInitialHand();
+            mainDeck.populateDeck(numPlayers);
+            turnManager.setPlayerManager(playerManager);
+		}
+		
+	}
+    */
+
+    public void start(Room room) {
+        int numPlayers = room.getPlayersList().size();
+
+		if (numPlayers > 2 || numPlayers < 5) {
+
+			mainDeck.initStartingDeck();
+            playerManager = new PlayerManager();
+            playerManager.setPlayers(room.getPlayersList());
             priorityManager.addPlayers(playerManager.getPlayers());
             playerManager.distributePlayersInitialHand();
             mainDeck.populateDeck(numPlayers);
