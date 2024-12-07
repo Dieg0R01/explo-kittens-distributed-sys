@@ -79,7 +79,7 @@ public class ClientHandler implements Runnable{
         // The client executing this method is the creator/host of the room
         String roomId = roomManager.createRoom(maxPlayers, playerHandled);
 
-        out.println("room_create:" + roomId);
+        out.println("room_created:" + roomId);
         currentRoomId = roomId; // Save the ID of the current room in the client handler
     }
 
