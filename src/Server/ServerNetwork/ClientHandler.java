@@ -14,7 +14,7 @@ public class ClientHandler implements Runnable{
     private final Socket client;
     private String currentRoomId; // Storage the room id associated to the client when JOIN
     private Player playerHandled;
-    private RoomManager roomManager;
+    private static final RoomManager roomManager = new RoomManager();
     private ExecutorService gameExecutor;
 
     public ClientHandler(Socket c) {
@@ -68,7 +68,7 @@ public class ClientHandler implements Runnable{
         }else if(message.startsWith("EXIT")){
             handleExitRoom(out);
         }else if(message.startsWith("DISCONNECT")){
-            // Manage disconnect casewwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+            // Manage disconnect case
         }
     }
 
@@ -77,7 +77,7 @@ public class ClientHandler implements Runnable{
         int maxPlayers = Integer.parseInt(parts[1]); // Extract the maximum number of players
 
         // The client executing this method is the creator/host of the room
-        String roomId = new RoomManager().createRoom(maxPlayers, playerHandled);
+        String roomId = roomManager.createRoom(maxPlayers, playerHandled);
 
         out.println("room_created:" + roomId);
         currentRoomId = roomId; // Save the ID of the current room in the client handler
