@@ -122,6 +122,7 @@ public class Game{
 
     public void start(Room room) {
         int numPlayers = room.getPlayersList().size();
+
 		if (numPlayers > 2 || numPlayers < 5) {
 
 			mainDeck.initStartingDeck();
@@ -135,9 +136,7 @@ public class Game{
 		
 	}
 
-    public void start(List<Player> players){
-        
-    }
+    
 
     public Map<Player, List<Card>> getPlayerHands() {
 		return playerManager.getHands();

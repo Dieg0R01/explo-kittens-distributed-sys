@@ -48,6 +48,7 @@ public class ClientHandler implements Runnable{
     private void processPlayer(Player player, PrintStream out) {
         System.out.println("Welcome player: " + player.getName());
         // Set id in case pre instance room (to no creator players)
+       // AQUÍ SE DEBERÍA METER QUE UN PLAYER SE AÑADA A LA LOBBY EN CUANTO SE CREA
         Room room = ServerNet.roomManager.getRoom(currentRoomId);
         if (room != null) {
             room.addPlayer(player, out);
@@ -115,8 +116,8 @@ public class ClientHandler implements Runnable{
 
             //<WARNING> game flow
 
-            //Game game = new Game(room);
-            //game.start();
+            Game game = new Game();
+            game.start(room);
         }
         return null;
     }

@@ -3,13 +3,18 @@ package Server.GameLogic;
 import DomainModel.Player;
 
 import java.io.PrintStream;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class RoomManager {
-     private final Map<String, Room> rooms = new HashMap<>();
+    private final Map<String, Room> rooms = new ConcurrentHashMap<>();
+    private final List<Player> Lobby = Collections.synchronizedList(new ArrayList<Player>());
 
+    // ------------------- ROOMS --------------------------
     public synchronized String createRoom(int maxPlayers, Player creator) {
         String roomId = UUID.randomUUID().toString(); // Generates a unique id
         rooms.put(roomId, new Room(roomId, maxPlayers, creator));
@@ -32,4 +37,15 @@ public class RoomManager {
     public Room getRoom(String roomId) {
         return rooms.get(roomId);
     }
+
+    //----------------------------- LOBBY -----------------------
+
+    public synchronized void enterLobby(Player pl){
+        Lobby.add(pl);
+    }
+
+    public synchronized void exitLobby(Player pl){
+        Lobby.remove(pl);
+    }
+
 }
