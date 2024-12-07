@@ -50,7 +50,7 @@ public class ClientHandler implements Runnable{
     private void processPlayer(Player player, PrintStream out) {
         System.out.println("Welcome player: " + player.getName());
         // Set id in case pre instance room (to no creator players)
-       // AQUÍ SE DEBERÍA METER QUE UN PLAYER SE AÑADA A LA LOBBY EN CUANTO SE CREA
+       
     }
 
     /* Messages to proccess example:
@@ -106,7 +106,7 @@ public class ClientHandler implements Runnable{
     private void handleStartGame(PrintStream out) {
         Room room = roomManager.getRoom(currentRoomId);
         if (room.isReadyToStart()) {
-            gameExecutor.submit(() -> startGame(room, out));
+           startGame(room, out);
         }
     }
 
@@ -125,7 +125,7 @@ public class ClientHandler implements Runnable{
     }
 
 
-    private Runnable startGame(Room room, PrintStream out){
+    private void startGame(Room room, PrintStream out){
         if (!room.isHost(playerHandled)) {
             out.println("error:player_not_host");
             return null; // If not the host, do not allow the game to start
@@ -142,12 +142,10 @@ public class ClientHandler implements Runnable{
 
         //<WARNING> game flow
 
-        Game game = new Game();
-        game.start(room.getMaxPlayers());
+        //Game game = new Game();
+        //game.start(room);
 
-        //Game game = new Game(room);
-        //game.start();
-
-        return null;
+        gameExecutor.execute(new GameSession());
+        
     }
 }
