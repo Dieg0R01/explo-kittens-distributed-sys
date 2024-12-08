@@ -5,14 +5,18 @@ El código utiliza pools de hilos para manejar múltiples conexiones y tareas co
 
 ```java
 // Pool global para gestionar múltiples clientes
-ExecutorService pool = Executors.newCachedThreadPool(); // Maneja dinámicamente el número de hilos
+// Maneja dinámicamente el número de hilos
+ExecutorService pool = Executors.newCachedThreadPool(); 
 
 // Pool local para tareas secuenciales
-ExecutorService gameExecutor = Executors.newSingleThreadExecutor(); // Ejecuta tareas de forma secuencial
+// Ejecuta tareas de forma secuencial
+ExecutorService gameExecutor = Executors.newSingleThreadExecutor(); 
 
 // Ejecución de tareas
-pool.execute(new ClientHandler(client)); // Manejo de un cliente en un hilo separado
-gameExecutor.submit(() -> processMessage(message, out)); // Procesamiento de mensajes dentro de una sala
+// Manejo de un cliente en un hilo separado
+pool.execute(new ClientHandler(client)); 
+// Procesamiento de mensajes dentro de una sala
+gameExecutor.submit(() -> processMessage(message, out)); 
 ```
 
 ### **2. Sincronización con `RoomManager`**
@@ -37,7 +41,8 @@ Cuando un juego comienza, una nueva sesión se ejecuta en un hilo independiente:
 ```java
 // Iniciar sesión de juego en una sala
 GameSession gameSession = new GameSession(room);
-gameExecutor.execute(gameSession); // Ejecutar la sesión de juego en un hilo dedicado
+// Ejecutar la sesión de juego en un hilo dedicado
+gameExecutor.execute(gameSession); 
 ```
 
 ### **4. Manejo de flujo de entrada/salida de clientes**
@@ -52,7 +57,7 @@ PrintStream out = new PrintStream(client.getOutputStream(), true);
 // Leer mensajes en un bucle
 String message;
 while ((message = (String) in.readObject()) != null) {
-		// Procesar mensajes en tareas independientes
+    // Procesar mensajes en tareas independientes
     gameExecutor.submit(() -> processMessage(message, out)); 
 }
 
