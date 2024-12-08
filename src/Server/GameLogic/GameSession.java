@@ -30,9 +30,8 @@ public class GameSession implements Runnable{
         // Creates the MAIN Game instance
         Game game = new Game();
         game.start(room);
-
         
-       
+       //
     }
 
     public void preparePlayers(){
