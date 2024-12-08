@@ -74,3 +74,8 @@ public class ClientHandler implements Runnable {
   </code>
 </pre>
 </head><body><article id="15138a47-4a51-8044-9fe5-c51dc92ed600" class="page sans"><header><h1 class="page-title">Explicación de la no finalización del proyecto</h1><p class="page-description"></p></header>
+
+El juego de cartas Exploding Kittens a la par que divertido, nos pareció de primeras un proyecto asequible en un mes. Pero para empezar, iniciamos el proyecto de diseño, con su diagrama de casos de uso, con los diagramas de actividades, queriendo tener claro cuáles iban a ser los pasos a dar una vez implementemos el juego.
+Sin darnos cuenta de que, tardaríamos demasiado tiempo implementando el modelo de dominio. Tanto tiempo, que para cuando nos pusimos a implementar la conexión enter cliente y servidor, en específico que varios clientes, en forma de jugador, se unieran en una room para poder comenzar una partida, nos dieron las mil intentando realizar las conexiones cliente - servidor. Nos hemos quedado a las puertas de poder realizar la conexión jugador - servidor cuando una partida ya ha sido iniciado.
+Sin pasar por alto que queríamos realizar la GUI, pero no hemos tenido tiempo suficiente. 
+Hemos aprendido mucho realizando este proyecto, pero hemos tardado mucho más tiempo de lo esperado al realizar implementaciones absurdas como tipos de datos que para esta asignatura no son significantes, pero son obviamente necesarias para la asignatura.
